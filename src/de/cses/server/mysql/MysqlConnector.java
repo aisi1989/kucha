@@ -529,8 +529,8 @@ public class MysqlConnector {
 			stmt = dbc.createStatement();
 			ResultSet rs = stmt.executeQuery("SELECT * FROM CaveType WHERE CaveTypeID =" + caveTypeID);
 			while (rs.next()) {
-				resultCaveType.setEnDescription(rs.getString("en.description"));
-				resultCaveType.setEnShortname(rs.getString("en.shortname"));
+				resultCaveType.setEnDescription(rs.getString("DescriptionEN"));
+				resultCaveType.setEnShortname(rs.getString("NameEN"));
 
 			}
 			rs.close();
@@ -548,13 +548,15 @@ public class MysqlConnector {
 		Connection dbc = getConnection();
 		ArrayList<CaveTypeEntry> results = new ArrayList<CaveTypeEntry>();
 		Statement stmt;
+		
+		
 		try {
 			stmt = dbc.createStatement();
 			ResultSet rs = stmt.executeQuery("SELECT * FROM CaveType");
 			while (rs.next()) {
 				System.err.println("cave type gefunden");
-				CaveTypeEntry caveType = new CaveTypeEntry(rs.getInt("CaveTypeID"), rs.getString("en.shortname"),
-						rs.getString("en.description"));
+				CaveTypeEntry caveType = new CaveTypeEntry(rs.getInt("CaveTypeID"), rs.getString("NameEN"),
+						rs.getString("DescriptionEN"));
 				results.add(caveType);
 			}
 			rs.close();
