@@ -42,6 +42,8 @@ public class DepictionEntry implements IsSerializable {
 	private int vendorID;
 	private int storyID;
 	private int caveID;
+	private int absoluteLeft;
+	private int absoluteTop;
 	
 	public DepictionEntry() {
 		depictionID = 0;
@@ -224,5 +226,22 @@ public class DepictionEntry implements IsSerializable {
 	public String getName() {
 		return "Cave: "+caveID+" Depiction: "+depictionID;
 	}
+
+	public int getAbsoluteLeft() {
+		return absoluteLeft;
+	}
+
+	public void setAbsoluteLeft(int absoluteLeft) {
+		this.absoluteLeft = absoluteLeft;
+	}
+
+	public int getAbsoluteTop() {
+		return absoluteTop;
+	}
+
+	public void setAbsoluteTop(int absoluteTop) {
+		this.absoluteTop = absoluteTop;
+	}
+	
 
 }

@@ -217,4 +217,15 @@ public class DatabaseServiceImpl extends RemoteServiceServlet implements Databas
 		return connector.getImageEntry(relatedImageID);
 	}
 
+	/* (non-Javadoc)
+	 * @see de.cses.client.DatabaseService#getDepictionsbyWallID(int)
+	 */
+	@Override
+	public ArrayList<DepictionEntry> getDepictionsbyWallID(int wallID) {
+		// TODO Auto-generated method stub
+		MysqlConnector connector = MysqlConnector.getInstance();
+		ArrayList<DepictionEntry> depictions = connector.getAllDepictionsbyWall(wallID);
+		return depictions;
+	}
+
 }

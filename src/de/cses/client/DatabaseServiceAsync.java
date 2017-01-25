@@ -88,4 +88,6 @@ public interface DatabaseServiceAsync {
 	
 	void getMasterImageEntryForDepiction(int depictionID, AsyncCallback<ImageEntry> asyncCallback) throws IllegalArgumentException;
 	
+	void getDepictionsbyWallID(int wallID, AsyncCallback<ArrayList<DepictionEntry>> asyncCallback) throws IllegalArgumentException;
+	
 }

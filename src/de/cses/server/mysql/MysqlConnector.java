@@ -866,5 +866,27 @@ public class MysqlConnector {
 		}
 		return result;
 	}
+	
+	public ArrayList<DepictionEntry> getAllDepictionsbyWall(int wallID){
+		ArrayList<DepictionEntry> depictions = new ArrayList<DepictionEntry>();
+		Connection dbc = getConnection();
+		Statement stmt;
+		try {
+			stmt = dbc.createStatement();
+			ResultSet rs = stmt.executeQuery("SELECT DepictionID, AbsoluteLeft, AbsoluteTop FROM Depictions WHERE WallID = " + wallID);
+			while (rs.next()) {
+				DepictionEntry depiction = new DepictionEntry();
+				depiction.setDepictionID(rs.getInt("DepictionID"));
+				depiction.setAbsoluteLeft(rs.getInt("AbsoluteLeft"));
+				depiction.setAbsoluteTop(rs.getInt("AbsoluteTop"));
+				
+				depictions.add(depiction);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return null;
+		}
+		return depictions;
+	}
 
 }

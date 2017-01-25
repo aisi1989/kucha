@@ -91,5 +91,7 @@ public interface DatabaseService extends RemoteService {
 	AuthorEntry getAuthorEntry(int id);
 
 	ImageEntry getMasterImageEntryForDepiction(int depictionID);
+	
+	ArrayList<DepictionEntry> getDepictionsbyWallID(int wallID);
 
 }
