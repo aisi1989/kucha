@@ -14,7 +14,14 @@
 package de.cses.client;
 
 import com.google.gwt.core.client.EntryPoint;
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Style.Unit;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.google.gwt.user.client.ui.AbsolutePanel;
+import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.TabLayoutPanel;
@@ -61,6 +68,7 @@ import de.cses.client.walls.Walls;
 public class TestApplication implements EntryPoint {
 
 	static Ornamentic ornamentic = new Ornamentic();
+	private final DatabaseServiceAsync dbService = GWT.create(DatabaseService.class);
 
 	private TabLayoutPanel main;
 
@@ -116,8 +124,49 @@ public class TestApplication implements EntryPoint {
    
     main.add(cella,"Cella Editor");
 		main.add(pEditor, "Photographer Editor");
-		Walls wall = new Walls();
-		main.add(wall, "Wall Editor");
+		
+		
+		final Walls wall = new Walls(0,true);
+		AbsolutePanel wallEditorBackground = new AbsolutePanel();
+		Button showpopup = new Button("Show popup");
+		final PopupPanel popup = new PopupPanel();
+		wall.setPanel(popup);
+		popup.add(wall.asWidget());
+		
+		
+		showpopup.addClickHandler(new ClickHandler(){
+
+			@Override
+			public void onClick(ClickEvent event) {
+				popup.show();
+				dbService.getDepictionEntry(1, new AsyncCallback<DepictionEntry>() {
+
+					@Override
+					public void onFailure(Throwable caught) {
+						caught.printStackTrace();
+						Window.alert("Saving failed");
+						Window.alert(caught.getMessage());
+					}
+
+					@Override
+					public void onSuccess(DepictionEntry result) {
+						Window.alert(result.getName());
+						wall.show();
+						wall.add(result);
+						
+					}
+				});
+				//wall.show();
+				
+			}
+			
+		});
+wallEditorBackground.add(showpopup);
+		
+	
+		
+		
+		main.add(wallEditorBackground, "Wall Editor");
 		
     TextButton imgEditorButton = new TextButton("Edit Image");
     imageEditorPanel = new PopupPanel(false);

@@ -16,6 +16,7 @@ package de.cses.shared;
 import java.sql.Date;
 
 import com.google.gwt.user.client.rpc.IsSerializable;
+import com.sencha.gxt.widget.core.client.container.SimpleContainer;
 
 public class DepictionEntry implements IsSerializable {
 
@@ -44,6 +45,7 @@ public class DepictionEntry implements IsSerializable {
 	private int caveID;
 	private int absoluteLeft;
 	private int absoluteTop;
+
 	
 	public DepictionEntry() {
 		depictionID = 0;
@@ -242,6 +244,16 @@ public class DepictionEntry implements IsSerializable {
 	public void setAbsoluteTop(int absoluteTop) {
 		this.absoluteTop = absoluteTop;
 	}
+
+
+	public void setWidth(double width) {
+		this.width = width;
+	}
+
+	public void setHeight(double height) {
+		this.height = height;
+	}
+	
 	
 
 }

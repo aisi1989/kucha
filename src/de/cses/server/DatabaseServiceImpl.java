@@ -227,5 +227,10 @@ public class DatabaseServiceImpl extends RemoteServiceServlet implements Databas
 		ArrayList<DepictionEntry> depictions = connector.getAllDepictionsbyWall(wallID);
 		return depictions;
 	}
+	public String saveDepiction(int depictionID, int absoluteLeft, int absoluteTop){
+		MysqlConnector connector = MysqlConnector.getInstance();
+		String saved = connector.saveDepiction(depictionID, absoluteLeft, absoluteTop);
+		return saved;
+	}
 
 }

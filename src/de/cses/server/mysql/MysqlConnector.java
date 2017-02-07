@@ -888,5 +888,22 @@ public class MysqlConnector {
 		}
 		return depictions;
 	}
+	
+	public String saveDepiction(int depictionID, int AbsoluteLeft, int AbsoluteTop){
+		Connection dbc = getConnection();
+		Statement stmt;
+		try {
+			stmt = dbc.createStatement();
+			stmt.executeQuery("UPDATE Depictions SET AbsoluteLeft ="+ AbsoluteLeft + ", AbsoluteTop ="+ AbsoluteTop+ "WHERE DepictionID ="+ depictionID );
+	
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return "failed to save depiction";
+			
+		}
+		return "saved";
+		
+		
+	}
 
 }

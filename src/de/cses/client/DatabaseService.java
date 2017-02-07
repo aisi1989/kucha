@@ -93,5 +93,7 @@ public interface DatabaseService extends RemoteService {
 	ImageEntry getMasterImageEntryForDepiction(int depictionID);
 	
 	ArrayList<DepictionEntry> getDepictionsbyWallID(int wallID);
+	
+	String saveDepiction(int depictionID, int absoluteLeft, int absoluteTop);
 
 }

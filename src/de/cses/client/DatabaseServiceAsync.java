@@ -90,4 +90,6 @@ public interface DatabaseServiceAsync {
 	
 	void getDepictionsbyWallID(int wallID, AsyncCallback<ArrayList<DepictionEntry>> asyncCallback) throws IllegalArgumentException;
 	
+	void saveDepiction(int depictionID, int absoluteLeft,int absoluteTop, AsyncCallback<String> asyncCallback) throws IllegalArgumentException;
+	
 }
