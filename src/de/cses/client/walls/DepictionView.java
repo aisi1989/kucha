@@ -18,7 +18,6 @@ import com.google.gwt.event.logical.shared.ResizeEvent;
 import com.google.gwt.event.logical.shared.ResizeHandler;
 import com.google.gwt.safehtml.shared.SafeUri;
 import com.google.gwt.safehtml.shared.UriUtils;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Image;
 import com.sencha.gxt.fx.client.Draggable;
@@ -47,7 +46,7 @@ public class DepictionView extends SimpleContainer{
 	public DepictionView(int depictionID, final boolean editable) {
 		
 		super();
-		Window.alert("im konstruktor");
+		
 		this.depictionID= depictionID;
 	
 		dbService.getMasterImageEntryForDepiction(depictionID,new AsyncCallback<ImageEntry>() {
@@ -59,7 +58,7 @@ public class DepictionView extends SimpleContainer{
 			} 
 			@Override
 			public void onSuccess(ImageEntry imageresult) {
-			Window.alert("bild gefunden");
+		
 				SafeUri uri =  UriUtils.fromString("http://kucha.informatik.hu-berlin.de/tomcat/kis/infosystem/images?imageID=" + imageresult.getImageID());
 				final Image image = new Image(uri);
 				depictionview.add(image);

@@ -10,12 +10,13 @@ import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.AbsolutePanel;
 import com.google.gwt.user.client.ui.Button;
+import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.sencha.gxt.widget.core.client.FramedPanel;
-import com.sencha.gxt.widget.core.client.button.ButtonBar;
+
 import com.sencha.gxt.widget.core.client.container.VBoxLayoutContainer;
 import com.sencha.gxt.widget.core.client.container.BoxLayoutContainer.BoxLayoutData;
 
@@ -29,9 +30,10 @@ public class Walls implements IsWidget{
 	private int wallID;
 	private AbsolutePanel background;
 	private boolean editable = false;
-	ButtonBar buttonbar = new ButtonBar();
+	HorizontalPanel buttonbar = new HorizontalPanel();
 	private PopupPanel panel;
-	private Button save = new Button("save");
+	private Button save = new Button("save & exit");
+	private Button uploadBackgorund = new Button("upload Background");
 
 	@Override
 	public Widget asWidget() {
@@ -64,8 +66,12 @@ public class Walls implements IsWidget{
 	
 
 		
-		Button cancel = new Button("close");
+		Button cancel = new Button("cancel & close");
 		buttonbar.add(cancel);
+		buttonbar.add(save);
+		buttonbar.add(uploadBackgorund);
+		save.setVisible(false);
+		uploadBackgorund.setVisible(false);
 		
 		cancel.addClickHandler(new ClickHandler(){
 
@@ -84,7 +90,7 @@ public class Walls implements IsWidget{
 	public void createNewDepictionOnWall(DepictionEntry depiction, boolean editable, boolean firstTime){
 		
 				DepictionView depictionview = new DepictionView(depiction.getDepictionID(), editable );
-				Window.alert("positioning new depiction");
+			
 				 background.add(depictionview);
 				 if(firstTime){
 					 background.setWidgetPosition(depictionview, 30, 30);
@@ -105,11 +111,11 @@ public class Walls implements IsWidget{
 
 			@Override
 			public void onSuccess(ArrayList<DepictionEntry> result) {
-				Window.alert("found one depiction for this wall");
+				
 				
 				for (final DepictionEntry depiction : result) {
 					if(depiction.getAbsoluteLeft() != -1 && depiction.getAbsoluteTop() != -1 ){
-						Window.alert("depiction wurde bereits plaziert");
+						
 					createNewDepictionOnWall(depiction, editable, false);
 					
 					}
@@ -125,7 +131,7 @@ public class Walls implements IsWidget{
 	}
 	public void show(){
 		getAllDepictionIDsbyWall();
-		Window.alert("going to show");
+		
 	}
 
 	public PopupPanel getPanel() {
@@ -144,9 +150,11 @@ public class Walls implements IsWidget{
 				public void onClick(ClickEvent event) {
 					
 					Iterator<Widget> iterator = background.iterator();
-					while(iterator.hasNext()){
-						if(iterator.next() instanceof DepictionView){
-						DepictionView depictionView =(DepictionView) iterator.next();
+					
+					while(iterator.hasNext() ){
+						Widget w = iterator.next();
+						if(w instanceof DepictionView){
+					DepictionView depictionView =(DepictionView) w;
 						
 					int absoluteLeft = 	depictionView.getAbsoluteLeft();
 					int absoluteTop = 	depictionView.getAbsoluteTop();
@@ -160,19 +168,24 @@ public class Walls implements IsWidget{
 
 						@Override
 						public void onSuccess(String result) {
-							
+						
 						}
 					});
 						
 					}
 					}
-				}
+					panel.hide();
+					}
+					
+				//}
 				});
-				buttonbar.add(save);
+				save.setVisible(true);
+				uploadBackgorund.setVisible(true);
 			
 		}
 		else{
-				buttonbar.remove(save);
+				save.setVisible(false);
+				uploadBackgorund.setVisible(false);
 			
 		}
 					

@@ -894,7 +894,7 @@ public class MysqlConnector {
 		Statement stmt;
 		try {
 			stmt = dbc.createStatement();
-			stmt.executeQuery("UPDATE Depictions SET AbsoluteLeft ="+ AbsoluteLeft + ", AbsoluteTop ="+ AbsoluteTop+ "WHERE DepictionID ="+ depictionID );
+			stmt.executeQuery("UPDATE Depictions SET AbsoluteLeft ="+ AbsoluteLeft + ", AbsoluteTop ="+ AbsoluteTop+ " WHERE DepictionID ="+ depictionID );
 	
 		} catch (SQLException e) {
 			e.printStackTrace();

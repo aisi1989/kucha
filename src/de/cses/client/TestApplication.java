@@ -126,7 +126,7 @@ public class TestApplication implements EntryPoint {
 		main.add(pEditor, "Photographer Editor");
 		
 		
-		final Walls wall = new Walls(0,true);
+		final Walls wall = new Walls(0,false);
 		AbsolutePanel wallEditorBackground = new AbsolutePanel();
 		Button showpopup = new Button("Show popup");
 		final PopupPanel popup = new PopupPanel();
@@ -144,13 +144,11 @@ public class TestApplication implements EntryPoint {
 					@Override
 					public void onFailure(Throwable caught) {
 						caught.printStackTrace();
-						Window.alert("Saving failed");
 						Window.alert(caught.getMessage());
 					}
 
 					@Override
 					public void onSuccess(DepictionEntry result) {
-						Window.alert(result.getName());
 						wall.show();
 						wall.add(result);
 						
