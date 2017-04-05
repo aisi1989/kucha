@@ -3,6 +3,7 @@ package de.cses.client.ornamentic;
 import java.util.ArrayList;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.editor.client.Editor.Path;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.logical.shared.SelectionEvent;
@@ -10,16 +11,21 @@ import com.google.gwt.event.logical.shared.SelectionHandler;
 import com.google.gwt.safehtml.shared.SafeHtml;
 import com.google.gwt.text.shared.AbstractSafeHtmlRenderer;
 import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
+import com.sencha.gxt.core.client.ValueProvider;
 import com.sencha.gxt.core.client.XTemplates;
 import com.sencha.gxt.data.shared.LabelProvider;
 import com.sencha.gxt.data.shared.ListStore;
 import com.sencha.gxt.data.shared.ModelKeyProvider;
 import com.sencha.gxt.data.shared.PropertyAccess;
+import com.sencha.gxt.dnd.core.client.ListViewDragSource;
+import com.sencha.gxt.dnd.core.client.ListViewDropTarget;
 import com.sencha.gxt.widget.core.client.FramedPanel;
+import com.sencha.gxt.widget.core.client.ListView;
 import com.sencha.gxt.widget.core.client.button.TextButton;
 import com.sencha.gxt.widget.core.client.container.VBoxLayoutContainer;
 import com.sencha.gxt.widget.core.client.form.ComboBox;
@@ -40,34 +46,33 @@ public class OrnamentCaveAttributes extends PopupPanel{
 	private ListStore<CaveEntry> caveEntryList;
 	private CaveEntryProperties caveEntryProps;
 	private ListStore<OrnamentOfOtherCulturesEntry> ornamentOfOtherCulturesEntryList;
+	private ListStore<OrnamentOfOtherCulturesEntry> similarOrnamentsofOtherCulturesListStore;
 	private OrnamentOfOtherCulturesEntryProperties ornamentOfOtherCulturesEntryProps;
 	private ListStore<DistrictEntry> districtEntryList;
 	private DistrictEntryProperties districtEntryProps;
 	private ListStore<OrnamentEntry> ornamentEntryList;
 	private OrnamentEntryProperties ornamentEntryProps;
-	private ComboBox<OrnamentEntry> relationToOtherOrnamentsComboBox;
-	private ComboBox<OrnamentOfOtherCulturesEntry> ornamentOfOtherCulturesComboBox;
-	private ComboBox<OrnamentEntry> similarOtherOrnamentsComboBox;
 	private ComboBox<DistrictEntry> districtComboBox;
 	private final DatabaseServiceAsync dbService = GWT.create(DatabaseService.class);
 	private PopupPanel popup = this;
-	private ArrayList<Integer> relatedOrnaments = new ArrayList<Integer>();
-	private ArrayList<Integer>similarOrnaments = new ArrayList<Integer>();
-	private ArrayList<Integer> otherCulturalOrnaments = new ArrayList<Integer>();
+	private ListStore<OrnamentEntry>selectedSimilarOrnaments;
+	private ListStore<OrnamentEntry>selectedRedlatedOrnaments;
 	private Ornamentic ornamentic;
 
 
 	public OrnamentCaveAttributes() {
 		super(false);
 		caveEntryProps = GWT.create(CaveEntryProperties.class);
-		caveEntryList = new ListStore<CaveEntry>(caveEntryProps.caveID());
-		districtEntryProps = GWT.create(DistrictEntryProperties.class);
-		districtEntryList = new ListStore<DistrictEntry>(districtEntryProps.districtID());
 		ornamentEntryProps = GWT.create(OrnamentEntryProperties.class);
+		districtEntryProps = GWT.create(DistrictEntryProperties.class);
+		caveEntryList = new ListStore<CaveEntry>(caveEntryProps.caveID());
+		districtEntryList = new ListStore<DistrictEntry>(districtEntryProps.districtID());
 		ornamentEntryList = new ListStore<OrnamentEntry>(ornamentEntryProps.OrnamentID());
-		
+		selectedSimilarOrnaments = new ListStore<OrnamentEntry>(ornamentEntryProps.OrnamentID());
+		selectedRedlatedOrnaments = new ListStore<OrnamentEntry>(ornamentEntryProps.OrnamentID());
 		ornamentOfOtherCulturesEntryProps = GWT.create(OrnamentOfOtherCulturesEntryProperties.class);
 		ornamentOfOtherCulturesEntryList = new ListStore<OrnamentOfOtherCulturesEntry>(ornamentOfOtherCulturesEntryProps.ornamentOfOtherCulturesID());
+		similarOrnamentsofOtherCulturesListStore = new ListStore<OrnamentOfOtherCulturesEntry>(ornamentOfOtherCulturesEntryProps.ornamentOfOtherCulturesID());
 
 		dbService.getOrnaments(new AsyncCallback<ArrayList<OrnamentEntry>>() {
 
@@ -210,6 +215,8 @@ public class OrnamentCaveAttributes extends PopupPanel{
 			}
 			
 		};
+		Button addWalls = new Button("Select Walls");
+		vlcCave.add(new FieldLabel(addWalls, "Select Walls"));
 		
 		caveEntryComboBox.addSelectionHandler(caveSelectionHandler);
 		
@@ -277,78 +284,66 @@ public class OrnamentCaveAttributes extends PopupPanel{
 	  groupOfOrnaments.setAllowBlank(true);
 	  vlcRelationToTherornaments.add(new FieldLabel(groupOfOrnaments, "Group of Ornaments"));
 	  
-	  relationToOtherOrnamentsComboBox =  new ComboBox<OrnamentEntry>(ornamentEntryList, ornamentEntryProps.code(),
-				new AbstractSafeHtmlRenderer<OrnamentEntry>() {
+	  HorizontalPanel relatedOrnamentsHorizontalPanel = new HorizontalPanel();
+	  relatedOrnamentsHorizontalPanel.setPixelSize(210, 210);
+	  
+	  ListView<OrnamentEntry, String> ornamentListViewRelated = new ListView<OrnamentEntry, String>(ornamentEntryList, ornamentEntryProps.code());
+	  ornamentListViewRelated.setPixelSize(100, 100);
+	  ListView<OrnamentEntry, String> selectedRelatedOrnamentsListView = new ListView<OrnamentEntry, String>(selectedRedlatedOrnaments, ornamentEntryProps.code());
+	  selectedRelatedOrnamentsListView.setPixelSize(100, 100);
+	  relatedOrnamentsHorizontalPanel.add(ornamentListViewRelated);
+	  relatedOrnamentsHorizontalPanel.add(selectedRelatedOrnamentsListView);
+	  
+    new ListViewDragSource<OrnamentEntry>(ornamentListViewRelated).setGroup("relatedOrnament");
+    new ListViewDragSource<OrnamentEntry>(selectedRelatedOrnamentsListView).setGroup("relatedOrnament");
 
-			@Override
-			public SafeHtml render(OrnamentEntry item) {
-				final OrnamentViewTemplates pvTemplates = GWT.create(OrnamentViewTemplates.class);
-				return pvTemplates.ornament(item.getCode());
-			}
-		});
-	  vlcRelationToTherornaments.add(new FieldLabel( relationToOtherOrnamentsComboBox, "Select related ornaments"));
+    new ListViewDropTarget<OrnamentEntry>(selectedRelatedOrnamentsListView).setGroup("relatedOrnament");
+    new ListViewDropTarget<OrnamentEntry>(ornamentListViewRelated).setGroup("relatedOrnament");
+    
+    
+	  vlcRelationToTherornaments.add(new FieldLabel(relatedOrnamentsHorizontalPanel, "Select related ornaments"));
 	  
-	  TextButton addRelatedOrnamentButton = new TextButton("Add Ornament");
-	  vlcRelationToTherornaments.add(addRelatedOrnamentButton);
 	  
-	  ClickHandler addRelatedOrnamentButtonClickHandler = new ClickHandler(){
+	  
+	  HorizontalPanel similarOrnamentsHorizontalPanel = new HorizontalPanel();
+	  similarOrnamentsHorizontalPanel.setPixelSize(210, 210);
+	  ListView<OrnamentEntry, String> ornamentListViewSimilar = new ListView<OrnamentEntry, String>(ornamentEntryList, ornamentEntryProps.code());
+	  ornamentListViewSimilar.setPixelSize(100, 100);
+	  ListView<OrnamentEntry, String> selectedSimilarOrnamentsListView = new ListView<OrnamentEntry, String>(selectedSimilarOrnaments, ornamentEntryProps.code());
+	  selectedSimilarOrnamentsListView.setPixelSize(100, 100);
+	  similarOrnamentsHorizontalPanel.add(ornamentListViewSimilar);
+	  similarOrnamentsHorizontalPanel.add(selectedSimilarOrnamentsListView);
+    
+    new ListViewDragSource<OrnamentEntry>(ornamentListViewSimilar).setGroup("similarOrnament");
+    new ListViewDragSource<OrnamentEntry>(selectedSimilarOrnamentsListView).setGroup("similarOrnament");
 
-			@Override
-			public void onClick(ClickEvent event) {
-			relatedOrnaments.add(relationToOtherOrnamentsComboBox.getValue().getOrnamentID());
-			}
-	  };
-	  addRelatedOrnamentButton.addHandler(addRelatedOrnamentButtonClickHandler, ClickEvent.getType());
+    new ListViewDropTarget<OrnamentEntry>(selectedSimilarOrnamentsListView).setGroup("similarOrnament");
+    new ListViewDropTarget<OrnamentEntry>(ornamentListViewSimilar).setGroup("similarOrnament");
+    
+	  vlcRelationToTherornaments.add(new FieldLabel(similarOrnamentsHorizontalPanel, "Select similar ornaments"));
 	  
 	  
+	  HorizontalPanel similarElementsHorizontalPanel = new HorizontalPanel();
+	  similarElementsHorizontalPanel.setPixelSize(210, 210);
+	  ListView<OrnamentOfOtherCulturesEntry, String> elementsListViewSimilar = new ListView<OrnamentOfOtherCulturesEntry, String>(ornamentOfOtherCulturesEntryList, ornamentOfOtherCulturesEntryProps.name());
+	  elementsListViewSimilar.setPixelSize(100, 100);
+	  ListView<OrnamentOfOtherCulturesEntry, String> selectedSimilarElementsListView = new ListView<OrnamentOfOtherCulturesEntry, String>(similarOrnamentsofOtherCulturesListStore, ornamentOfOtherCulturesEntryProps.name());
+	  selectedSimilarElementsListView.setPixelSize(100, 100);
+	  similarElementsHorizontalPanel.add(elementsListViewSimilar);
+	  similarElementsHorizontalPanel.add(selectedSimilarElementsListView);
 	  
-	  similarOtherOrnamentsComboBox =  new ComboBox<OrnamentEntry>(ornamentEntryList, ornamentEntryProps.code(),
-				new AbstractSafeHtmlRenderer<OrnamentEntry>() {
 
-			@Override
-			public SafeHtml render(OrnamentEntry item) {
-				final OrnamentViewTemplates pvTemplates = GWT.create(OrnamentViewTemplates.class);
-				return pvTemplates.ornament(item.getCode());
-			}
-		});
-	  vlcRelationToTherornaments.add(new FieldLabel( similarOtherOrnamentsComboBox, "Select similar ornaments"));
-	  
-	  TextButton addSimilarOrnamentButton = new TextButton("Add Ornament");
-	  vlcRelationToTherornaments.add(addSimilarOrnamentButton);
-	  
-	  ClickHandler similarOtherOrnamentsButtonClickHandler = new ClickHandler(){
+    new ListViewDragSource<OrnamentOfOtherCulturesEntry>(elementsListViewSimilar).setGroup("similarElement");
+    new ListViewDragSource<OrnamentOfOtherCulturesEntry>(selectedSimilarElementsListView).setGroup("similarElement");
 
-			@Override
-			public void onClick(ClickEvent event) {
-			similarOrnaments.add(similarOtherOrnamentsComboBox.getValue().getOrnamentID());
-			}
-	  };
-	  addSimilarOrnamentButton.addHandler(similarOtherOrnamentsButtonClickHandler, ClickEvent.getType());
-	  
-	  
-	  
-	  ornamentOfOtherCulturesComboBox =  new ComboBox<OrnamentOfOtherCulturesEntry>(ornamentOfOtherCulturesEntryList, ornamentOfOtherCulturesEntryProps.name(),
-				new AbstractSafeHtmlRenderer<OrnamentOfOtherCulturesEntry>() {
-
-			@Override
-			public SafeHtml render(OrnamentOfOtherCulturesEntry item) {
-				final OrnamentOfOtherCulturesEntryViewTemplates pvTemplates = GWT.create(OrnamentOfOtherCulturesEntryViewTemplates.class);
-				return pvTemplates.ornamentOfOtherCultures(item.getName());
-			}
-		});
-	  vlcRelationToTherornaments.add(new FieldLabel(ornamentOfOtherCulturesComboBox, "Select similar ornaments of other cultures"));
-	  
-	  TextButton addOrnamentOfOtherCulturesButton = new TextButton("Add Ornament");
-	  vlcRelationToTherornaments.add(addOrnamentOfOtherCulturesButton);
-	  
-	  ClickHandler addOrnamentOfOtherCulturesButtonClickHandler = new ClickHandler(){
-
-			@Override
-			public void onClick(ClickEvent event) {
-				otherCulturalOrnaments.add(ornamentOfOtherCulturesComboBox.getValue().getOrnamentOfOtherCulturesID());
-			}
-	  };
-	  addOrnamentOfOtherCulturesButton.addHandler(addOrnamentOfOtherCulturesButtonClickHandler, ClickEvent.getType());
+    new ListViewDropTarget<OrnamentOfOtherCulturesEntry>(elementsListViewSimilar).setGroup("similarElement");
+    new ListViewDropTarget<OrnamentOfOtherCulturesEntry>(selectedSimilarElementsListView).setGroup("similarElement");
+    
+	  vlcRelationToTherornaments.add(new FieldLabel(similarElementsHorizontalPanel, "Select similar elements of other cultures"));
+	 
+	  TextField relatedElementsofOtherCultures = new TextField();
+	  relatedElementsofOtherCultures.setPixelSize(100, 200);
+	  vlcRelationToTherornaments.add(new FieldLabel(relatedElementsofOtherCultures, "Describe related elements of other cultures"));
 	  
 	  
 	  ornamentCaveAttributesPanel.add(relationToOtherOrnaments);
@@ -388,9 +383,9 @@ public class OrnamentCaveAttributes extends PopupPanel{
 			ornamentCaveRelation.setMainTopologycalClass(Integer.parseInt(mainTopologycalclass.getText()));
 			ornamentCaveRelation.setStyle(Integer.parseInt(style.getText()));
 			ornamentCaveRelation.setStructure(structureOrganization.getText());
-			ornamentCaveRelation.setOtherCulturalOrnamentsRelationID(otherCulturalOrnaments);
-			ornamentCaveRelation.setRelatedOrnamentsRelationID(relatedOrnaments);
-			ornamentCaveRelation.setSimilarOrnamentsRelationID(similarOrnaments);
+			ornamentCaveRelation.setOtherCulturalOrnamentsRelationID(similarOrnamentsofOtherCulturesListStore.getAll());
+			ornamentCaveRelation.setRelatedOrnamentsRelationID(selectedRedlatedOrnaments.getAll());
+			ornamentCaveRelation.setSimilarOrnamentsRelationID(selectedSimilarOrnaments.getAll());
 			ornamentic.getCaveOrnamentRelationList().add(ornamentCaveRelation);
 			//doenst work, listview still needs more space
 			ornamentic.getCavesList().refresh();
@@ -420,13 +415,13 @@ public class OrnamentCaveAttributes extends PopupPanel{
 	}
 	interface OrnamentEntryProperties extends PropertyAccess<OrnamentEntry> {
 		ModelKeyProvider<OrnamentEntry> OrnamentID();
-
-		LabelProvider<OrnamentEntry> code();
+		 @Path("code")
+	   ValueProvider<OrnamentEntry, String> code();
 	}
 	interface OrnamentOfOtherCulturesEntryProperties extends PropertyAccess<OrnamentOfOtherCulturesEntry> {
 		ModelKeyProvider<OrnamentOfOtherCulturesEntry> ornamentOfOtherCulturesID();
 
-		LabelProvider<OrnamentOfOtherCulturesEntry> name();
+		ValueProvider<OrnamentOfOtherCulturesEntry, String> name();
 	}
 	interface DistrictEntryProperties extends PropertyAccess<DistrictEntry> {
 		ModelKeyProvider<DistrictEntry> districtID();
@@ -444,30 +439,6 @@ public class OrnamentCaveAttributes extends PopupPanel{
 	interface OrnamentOfOtherCulturesEntryViewTemplates extends XTemplates {
 		@XTemplate("<div>{name}</div>")
 		SafeHtml ornamentOfOtherCultures(String name);
-	}
-	public ComboBox<OrnamentEntry> getRelationToOtherOrnamentsComboBox() {
-		return relationToOtherOrnamentsComboBox;
-	}
-
-
-
-
-	public void setRelationToOtherOrnamentsComboBox(ComboBox<OrnamentEntry> relationToOtherOrnamentsComboBox) {
-		this.relationToOtherOrnamentsComboBox = relationToOtherOrnamentsComboBox;
-	}
-
-
-
-
-	public ComboBox<OrnamentEntry> getSimilarOtherOrnamentsComboBox() {
-		return similarOtherOrnamentsComboBox;
-	}
-
-
-
-
-	public void setSimilarOtherOrnamentsComboBox(ComboBox<OrnamentEntry> similarOtherOrnamentsComboBox) {
-		this.similarOtherOrnamentsComboBox = similarOtherOrnamentsComboBox;
 	}
 
 

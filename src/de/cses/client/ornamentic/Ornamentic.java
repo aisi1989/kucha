@@ -73,7 +73,7 @@ public Widget createForm(){
   
   final TextField discription = new TextField();
   discription.setAllowBlank(true);
-  vlc.add(new FieldLabel(discription, "Discription"));
+  vlc.add(new FieldLabel(discription, "Description"));
   
   final TextField remarks = new TextField();
   remarks.setAllowBlank(true);
