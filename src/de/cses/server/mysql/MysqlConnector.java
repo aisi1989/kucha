@@ -22,7 +22,6 @@ import java.sql.Statement;
 import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
@@ -2736,6 +2735,28 @@ public class MysqlConnector {
 			ResultSet rs = stmt.executeQuery("SELECT * FROM ModesOfRepresentation");
 			while (rs.next()) {
 				result.add(new ModeOfRepresentationEntry(rs.getInt("ModeOfRepresentationID"), rs.getString("Name")));
+			}
+			rs.close();
+			stmt.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return result;
+	}
+
+	/**
+	 * @return
+	 */
+	public ModeOfRepresentationEntry getModesOfRepresentation(int modesOfRepID) {
+		ModeOfRepresentationEntry result = null;
+		Connection dbc = getConnection();
+
+		Statement stmt;
+		try {
+			stmt = dbc.createStatement();
+			ResultSet rs = stmt.executeQuery("SELECT * FROM ModesOfRepresentation WHERE ModeOfRepresentationID=" + modesOfRepID);
+			if (rs.first()) {
+				result = new ModeOfRepresentationEntry(rs.getInt("ModeOfRepresentationID"), rs.getString("Name"));
 			}
 			rs.close();
 			stmt.close();

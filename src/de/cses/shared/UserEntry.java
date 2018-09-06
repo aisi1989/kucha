@@ -21,8 +21,8 @@ import java.util.Date;
  */
 public class UserEntry extends AbstractEntry {
 
-	public static final int ASSOCIATED = 1;
-	public static final int FULL = 2;
+	public static final int ACCESS_LEVEL_ASSOCIATED = 1;
+	public static final int ACCESS_LEVEL_FULL = 2;
 	
 	private int userID;
 	private String username;
@@ -38,7 +38,7 @@ public class UserEntry extends AbstractEntry {
 	 * 
 	 */
 	public UserEntry() {
-		this(0, "", "", "", "", "", ASSOCIATED);
+		this(0, "", "", "", "", "", ACCESS_LEVEL_ASSOCIATED);
 	}
 
 	/**

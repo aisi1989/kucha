@@ -15,10 +15,13 @@ package de.cses.server;
 
 import java.awt.Image;
 import java.awt.image.BufferedImage;
+import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.StringReader;
 
 import javax.imageio.ImageIO;
 import javax.servlet.ServletException;
@@ -27,6 +30,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import de.cses.server.htmlfactory.DepictionDisplay;
 import de.cses.server.mysql.MysqlConnector;
 import de.cses.shared.ImageEntry;
 import de.cses.shared.UserEntry;
@@ -50,12 +54,13 @@ public class ResourceDownloadServlet extends HttpServlet {
 	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		String sessionID = request.getParameter("sessionID");
-		if (request.getParameter("imageID") != null) {
+		
+		if (request.getParameter("imageID") != null) {	// processing imageID request
 			String imageID = request.getParameter("imageID");
 			ImageEntry imgEntry = connector.getImageEntry(Integer.parseInt(imageID));
 			String filename;
 			File inputFile;
-			if ((imgEntry!=null && imgEntry.isOpenAccess()) || (connector.getAccessRightsFromUsers(sessionID) == UserEntry.FULL)) {
+			if ((imgEntry!=null && imgEntry.isOpenAccess()) || (connector.getAccessRightsFromUsers(sessionID) == UserEntry.ACCESS_LEVEL_FULL)) {
 				filename = imgEntry.getFilename();
 				inputFile = new File(
 						serverProperties.getProperty("home.images"), 
@@ -94,7 +99,7 @@ public class ResourceDownloadServlet extends HttpServlet {
 				response.setStatus(404);
 				return;
 			}
-		} else if (request.getParameter("background") != null) {
+		} else if (request.getParameter("background") != null) { // processing background request 
 			String filename = request.getParameter("background");
 			if (filename.startsWith(".")) {
 				response.setStatus(400);
@@ -117,7 +122,7 @@ public class ResourceDownloadServlet extends HttpServlet {
 					return;
 				}
 			}
-		} else if (request.getParameter("cavesketch") != null) {
+		} else if (request.getParameter("cavesketch") != null) { // processing cavesketch request
 			String filename = request.getParameter("cavesketch");
 			if (filename.startsWith(".")) {
 				response.setStatus(400);
@@ -140,8 +145,8 @@ public class ResourceDownloadServlet extends HttpServlet {
 					return;
 				}
 			}
-		} else if (request.getParameter("document") != null) {
-			if (connector.getAccessRightsFromUsers(sessionID) == UserEntry.FULL) {
+		} else if (request.getParameter("document") != null) { // processing document request
+			if (connector.getAccessRightsFromUsers(sessionID) == UserEntry.ACCESS_LEVEL_FULL) {
 				String filename = request.getParameter("document");
 				if (filename.startsWith(".")) {
 					response.setStatus(400);
@@ -168,7 +173,20 @@ public class ResourceDownloadServlet extends HttpServlet {
 				response.setStatus(403);
 				return;
 			}
-		} else {
+		} else if (request.getParameter("depictionID") != null) { // processing depictionID request
+			int depictionID = Integer.parseInt(request.getParameter("depictionID"));
+			if (depictionID <= 0) {
+				response.setStatus(400);
+				return;
+			} else {
+				DepictionDisplay dhd = new DepictionDisplay(depictionID, connector.getAccessRightsFromUsers(sessionID));
+				response.setContentType("text/html");
+				ServletOutputStream out = response.getOutputStream();
+				String s = "<h1>test</h1>";
+				out.write(s.getBytes());
+				out.close();
+			}
+		} else { // no match for processing found
 			response.setStatus(400);
 		}
 	}
