@@ -14,9 +14,11 @@
 package de.cses.client.depictions;
 
 import com.google.gwt.core.shared.GWT;
+import com.google.gwt.safehtml.shared.SafeHtml;
 import com.google.gwt.safehtml.shared.SafeUri;
 import com.google.gwt.safehtml.shared.UriUtils;
 import com.google.gwt.user.client.ui.HTML;
+import com.sencha.gxt.core.client.XTemplates;
 import com.sencha.gxt.widget.core.client.container.MarginData;
 
 import de.cses.client.StaticTables;
@@ -30,6 +32,12 @@ import de.cses.shared.PreservationAttributeEntry;
  *
  */
 public class DepictionDataDisplay extends AbstractDataDisplay {
+	
+	interface DepictionTemplates extends XTemplates {
+		@XTemplate("<iframe style='width: 100%; height:100%' src='{uri}'><p>Your browser does not support iframes.</p></iframe>")
+		SafeHtml depiction(SafeUri uri);
+	}
+
 	
 	/**
 	 * 
@@ -83,7 +91,9 @@ public class DepictionDataDisplay extends AbstractDataDisplay {
 				e.getLastChangedOnDate()
 			));
 		htmlWidget.addStyleName("html-data-display");
-		add(htmlWidget, new MarginData(0, 0, 0, 0));
+//		add(htmlWidget, new MarginData(0, 0, 0, 0));
+		DepictionTemplates dt = GWT.create(DepictionTemplates.class);
+		add(new HTML(dt.depiction(UriUtils.fromString("/resource?depictionID=" + e.getDepictionID() + UserLogin.getInstance().getUsernameSessionIDParameterForUri()))), new MarginData(0, 0, 0, 0));
 		setHeading((shortname.length() > 0 ? shortname + " " : "") + (cave.length() > 0 ? " in " + cave : ""));
 	}
 

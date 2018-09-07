@@ -179,11 +179,11 @@ public class ResourceDownloadServlet extends HttpServlet {
 				response.setStatus(400);
 				return;
 			} else {
-				DepictionDisplay dhd = new DepictionDisplay(depictionID, connector.getAccessRightsFromUsers(sessionID));
+				DepictionDisplay dhd = new DepictionDisplay(depictionID, sessionID);
 				response.setContentType("text/html");
+				response.setCharacterEncoding("UTF8");
 				ServletOutputStream out = response.getOutputStream();
-				String s = "<h1>test</h1>";
-				out.write(s.getBytes());
+				out.write(dhd.getHtml().getBytes());
 				out.close();
 			}
 		} else { // no match for processing found
