@@ -30,7 +30,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import de.cses.server.htmlfactory.DepictionDisplay;
+import de.cses.server.html.DepictionDisplayFactory;
 import de.cses.server.mysql.MysqlConnector;
 import de.cses.shared.ImageEntry;
 import de.cses.shared.UserEntry;
@@ -179,7 +179,7 @@ public class ResourceDownloadServlet extends HttpServlet {
 				response.setStatus(400);
 				return;
 			} else {
-				DepictionDisplay dhd = new DepictionDisplay(depictionID, sessionID);
+				DepictionDisplayFactory dhd = new DepictionDisplayFactory(depictionID, sessionID);
 				response.setContentType("text/html");
 				response.setCharacterEncoding("UTF8");
 				ServletOutputStream out = response.getOutputStream();

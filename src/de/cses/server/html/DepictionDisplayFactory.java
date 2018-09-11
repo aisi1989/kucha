@@ -11,7 +11,7 @@
  * You should have received a copy of the GPL v3 along with the software. 
  * If not, you can access it from here: <https://www.gnu.org/licenses/gpl-3.0.txt>.
  */
-package de.cses.server.htmlfactory;
+package de.cses.server.html;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -29,7 +29,7 @@ import de.cses.shared.DepictionEntry;
  * @author alingnau
  *
  */
-public class DepictionDisplay {
+public class DepictionDisplayFactory {
 	
 	private String html;
 	private DepictionEntry entry;
@@ -38,17 +38,19 @@ public class DepictionDisplay {
 	/**
 	 * 
 	 */
-	public DepictionDisplay(int depictionID, String sessionID) {
+	public DepictionDisplayFactory(int depictionID, String sessionID) {
 		entry = connector.getDepictionEntry(depictionID);
 		String content;
-		String htmlFilename = System.getProperty("user.dir") + "/lib/html/DepictionDisplayFull.html";
-		try {
-			content = FileUtils.readFileToString(new File(htmlFilename), StandardCharsets.UTF_8);
+//		String htmlFilename = System.getProperty("user.dir") + "/lib/html/DepictionDisplayFull.html";
+		try {			
+//			content = FileUtils.readFileToString(new File(htmlFilename), StandardCharsets.UTF_8);
+			content = FileUtils.readFileToString(new File(getClass().getResource("./template/DepictionDisplayFull.html").getFile()), StandardCharsets.UTF_8);
 			String imageUri = String.format("resource?imageID=%d&thumb=700&sessionID=%s", entry.getMasterImageID(), sessionID);
 			String fullImageUri = "resource?imageID=" + entry.getMasterImageID() + "&sessionID=" + sessionID;
 			String figureCaption = entry.getShortName() + (entry.getWidth() > 0 || entry.getHeight() > 0 ? " (width: " + entry.getWidth() + " cm, height: " + entry.getHeight() + " cm)" : "");
 			
-			html = String.format(content, fullImageUri, imageUri, figureCaption, entry.getInventoryNumber(), entry.getLastChangedOnDate(), entry.getLastChangedByUser());
+			html = String.format(content, fullImageUri, imageUri, figureCaption, entry.getInventoryNumber(), entry.getCave().
+					entry.getLastChangedOnDate(), entry.getLastChangedByUser());
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

@@ -31,7 +31,10 @@
 				<path refid="gxt.class.path"/>
 			</classpath>
 		</javac>
-<!--		<copy file="src/de/cses/server/mysql/messages.properties" todir="war/WEB-INF/classes/de/cses/server/mysql" /> -->
+		<copy todir="war/WEB-INF/classes/de/cses/server/html/template" >  
+		        <fileset dir="src/de/cses/server/html/template/" includes="**"/>  
+		 </copy> 	
+<!--		<copy dir="src/de/cses/server/html/template/*" todir="war/WEB-INF/classes/de/cses/server/html/template" /> -->
 	</target>
 	<target name="war" depends="compile-servlets,gwtc">
 		<available file="war/infosystem/infosystem.nocache.js" property="gwt_compiled" />
