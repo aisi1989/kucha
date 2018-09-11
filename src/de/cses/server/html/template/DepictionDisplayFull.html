@@ -17,101 +17,65 @@
 			<td class="data-view-left"><i>Inventory No.</i></td>
 			<td class="data-view-right">%s</td>
 		</tr>
-	</table>
+		<!-- cave -->
 		<tr style="border-bottom: 1px solid black">
 			<td class="data-view-left"><i>Located in Cave</i></td>
 			<td class="data-view-right">%s</td>
 		</tr>
-<!-- 
-		<tpl if="expedition != &quot;&quot;">
 		<tr style="border-bottom: 1px solid black">
 			<td class="data-view-left"><i>Found by expedition</i></td>
-			<td class="data-view-right">{expedition}</td>
+			<td class="data-view-right">%s</td>
 		</tr>
-		</tpl>
-		<tpl if="vendor != &quot;&quot;">
 		<tr style="border-bottom: 1px solid black"> 
 			<td class="data-view-left"><i>Vendor</i></td>
-			<td class="data-view-right">{vendor}</td>
+			<td class="data-view-right">%s</td>
 		</tr>
-		</tpl>
-		<tpl if="purchaseDate != &quot;&quot;">
 		<tr style="border-bottom: 1px solid black">
 			<td class="data-view-left"><i>Purchase Date</i></td>
-			<td class="data-view-right">{purchaseDate}</td>
+			<td class="data-view-right">%s</td>
 		</tr>
-		</tpl>
-		<tpl if="currentLocation != &quot;&quot;">
 		<tr style="border-bottom: 1px solid black">
 			<td class="data-view-left"><i>Current location</i></td>
-			<td class="data-view-right">{currentLocation}</td>
+			<td class="data-view-right">%s</td>
 		</tr>
-		</tpl>
-		<tpl if="stateOfPreservation != &quot;&quot;">
 		<tr style="border-bottom: 1px solid black">
 			<td class="data-view-left"><i>State of preservation</i></td>
-			<td class="data-view-right">{stateOfPreservation}</td>
+			<td class="data-view-right">%s</td>
 		</tr>
-		</tpl>
-		<tpl if="style != &quot;&quot;">
 		<tr style="border-bottom: 1px solid black">
 			<td class="data-view-left"><i>Style</i></td>
-			<td class="data-view-right">{style}</td>
+			<td class="data-view-right">%s</td>
 		</tr>
-		</tpl>
-		<tpl if="modeOfRepresentation != &quot;&quot;">
 		<tr style="border-bottom: 1px solid black">
 			<td class="data-view-left"><i>Mode of representation</i></td>
-			<td class="data-view-right">{modeOfRepresentation}</td>
+			<td class="data-view-right">%s</td>
 		</tr>
-		</tpl>
 	</table>
-	<tpl if="cave != &quot;&quot;">
 	<figure style='text-align: center; margin: 10;'>
-		<img src='{realCaveSketchUri}'
+		<img src='%s'
 			style='position: relative; width: 100%%; height: auto;'>
 		<figcaption style='font-size: 14px;'>Cave sketch</figcaption>
 	</figure>
-	</tpl>
 
 	<h4 class="data-display">Indexing</h4>
 
 	<h5 class="data-display">Iconography</h5>
-	<ul class="simple-list">
-		<tpl for="iconography">
-			<tpl if="iconographyID &lt; 2000"><li>{text}</li></tpl>
-		</tpl>
-	</ul>
+	<ul class="simple-list">%s</ul>
 
 	<h5 class="data-display">Pictorial Elements</h5>
-	<ul class="simple-list">
-		<tpl for="iconography">
-			<tpl if="iconographyID &gt; 2000"><li>{text}</li></tpl>
-		</tpl>
-	</ul>
+	<ul class="simple-list">%s</ul>
 
 	<h4 class="data-display">Description</h4>
-	<p class="data-display">{description}</p>
+	<p class="data-display">%s</p>
 
 	<h4 class="data-display">General Remarks</h4>
-	<p class="data-display">{generalRemarks}</p>
+	<p class="data-display">%s</p>
 
 	<h4 class="data-display">Other Suggested Identifications</h4>
-	<p class="data-display">{otherSuggestedIdentifications}</p>
+	<p class="data-display">%s</p>
 
 	<h4 class="data-display">Related Bibliography</h4>
-	<ol class="simple-list">
-		<tpl for='bib'>
-		<li>{authors} <tpl if="yearORG != &quot;&quot;">({yearORG})</tpl>.
-			<i>{titleORG}</i> <tpl if="titleEN != &quot;&quot;">({titleEN})</tpl>.
-			<tpl if="parentTitleORG != &quot;&quot;"> In <tpl
-				if="editors != &quot;&quot;"> {editors} (eds.)</tpl> <i>{parentTitleORG}</i>
-			<tpl if="pagesORG != &quot;&quot;"> (pp. {pagesORG})</tpl>. </tpl> <tpl
-				if="publisher != &quot;&quot;"> {publisher}. </tpl>
-		</li>
-		</tpl>
-	</ol>
-	 -->
+	<ol class="simple-list">%s</ol>
 
 	 <!-- timestamp / user -->
 	<p class="date">Last changes on %s by %s.</p>

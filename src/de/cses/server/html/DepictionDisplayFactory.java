@@ -22,8 +22,15 @@ import java.nio.charset.StandardCharsets;
 
 import org.apache.commons.io.FileUtils;
 
+import com.google.gwt.safehtml.shared.UriUtils;
+
+import de.cses.client.StaticTables;
+import de.cses.client.user.UserLogin;
 import de.cses.server.mysql.MysqlConnector;
+import de.cses.shared.AnnotatedBiblographyEntry;
 import de.cses.shared.DepictionEntry;
+import de.cses.shared.IconographyEntry;
+import de.cses.shared.PreservationAttributeEntry;
 
 /**
  * @author alingnau
@@ -48,8 +55,63 @@ public class DepictionDisplayFactory {
 			String imageUri = String.format("resource?imageID=%d&thumb=700&sessionID=%s", entry.getMasterImageID(), sessionID);
 			String fullImageUri = "resource?imageID=" + entry.getMasterImageID() + "&sessionID=" + sessionID;
 			String figureCaption = entry.getShortName() + (entry.getWidth() > 0 || entry.getHeight() > 0 ? " (width: " + entry.getWidth() + " cm, height: " + entry.getHeight() + " cm)" : "");
+			String caveName = "";
+			String realCaveSketchUri = "";
+			if (entry.getCave() != null) {
+				caveName = connector.getSite(entry.getCave().getSiteID()).getShortName() + " " + entry.getCave().getOfficialNumber();
+				if (entry.getCave().getSiteID() > 0) {
+					caveName += connector.getSite(entry.getCave().getSiteID()).getShortName() + ": ";
+				}
+				caveName += entry.getCave().getOfficialNumber() + ((entry.getCave().getHistoricName() != null && entry.getCave().getHistoricName().length() > 0) ? " (" + entry.getCave().getHistoricName() + ")" : ""); 
+				realCaveSketchUri = "resource?cavesketch=" + entry.getCave().getOptionalCaveSketch() + "&sessionID=" + sessionID;
+			}
+			String stateOfPreservation = "";
+			for (PreservationAttributeEntry pae : entry.getPreservationAttributesList()) {
+				stateOfPreservation += stateOfPreservation.length() > 0 ? ", " + pae.getName() : pae.getName();
+			}
+			String style = entry.getStyleID() > 0 ? connector.getStylebyID(entry.getStyleID()).getStyleName() : "";
+			String modeOfRepresentation = entry.getModeOfRepresentationID() > 0 ? connector.getModesOfRepresentation(entry.getModeOfRepresentationID()).getName() : "";
+			String iconographyList = "";
+			String pictorialElementsList = "";
+			for (IconographyEntry ie : entry.getRelatedIconographyList()) {
+				if (ie.getIconographyID() < 2000) {
+					iconographyList += "<li>" + ie.getText() + "</li>";
+				} else {
+					pictorialElementsList += "<li>" + ie.getText() + "</li>";
+				}
+			}
+			String bibList = "";
+			for (AnnotatedBiblographyEntry be : entry.getRelatedBibliographyList()) {
+				String listElement = "<li>" + be.getAuthors() + (!be.getYearORG().isEmpty() ? " ("+be.getYearORG()+"). " : ". ")
+						+ "<i>" + be.getTitleORG() + "</i>" + (!be.getTitleEN().isEmpty() ? " ("+be.getTitleEN()+"). " : ". ");
+				if (!be.getParentTitleORG().isEmpty()) {
+					listElement += "In " + (!be.getEditors().isEmpty() ? be.getEditors() + " (" + be.getEditorType() + ") <i>" : "<i>") + be.getParentTitleEN() + "</i>"
+							+ (!be.getPagesORG().isEmpty() ? " ("+be.getPagesORG()+"). " : ". ");
+				}
+				if (be.getPublisher().isEmpty()) {
+					listElement += be.getPublisher() + ".";
+				}
+				listElement += "</li>";
+				bibList += listElement;
+			}
 			
-			html = String.format(content, fullImageUri, imageUri, figureCaption, entry.getInventoryNumber(), entry.getCave().
+			html = String.format(content, fullImageUri, imageUri, figureCaption, 
+					entry.getInventoryNumber()!=null ? entry.getInventoryNumber() : "", 
+					caveName,
+					entry.getExpedition() != null ? entry.getExpedition().getName() : "",
+					entry.getVendor() != null ? entry.getVendor().getVendorName() : "",
+					entry.getPurchaseDate() != null ? entry.getPurchaseDate().toString() : "",
+					entry.getLocation() != null ? entry.getLocation().getName() : "",
+					stateOfPreservation,
+					style,
+					modeOfRepresentation,
+					realCaveSketchUri,
+					iconographyList,
+					pictorialElementsList,
+					entry.getDescription() != null ? entry.getDescription() : "",
+					entry.getGeneralRemarks() != null ? entry.getGeneralRemarks() : "",
+					entry.getOtherSuggestedIdentifications() != null ? entry.getOtherSuggestedIdentifications() : "",
+					bibList,
 					entry.getLastChangedOnDate(), entry.getLastChangedByUser());
 		} catch (IOException e) {
 			e.printStackTrace();
