@@ -175,11 +175,12 @@ public class ResourceDownloadServlet extends HttpServlet {
 			}
 		} else if (request.getParameter("depictionID") != null) { // processing depictionID request
 			int depictionID = Integer.parseInt(request.getParameter("depictionID"));
+			boolean showPreview = request.getParameter("preview") != null ? Boolean.parseBoolean("preview") : false;
 			if (depictionID <= 0) {
 				response.setStatus(400);
 				return;
 			} else {
-				DepictionDisplayFactory dhd = new DepictionDisplayFactory(depictionID, sessionID);
+				DepictionDisplayFactory dhd = new DepictionDisplayFactory(depictionID, sessionID, showPreview);
 				response.setContentType("text/html");
 				response.setCharacterEncoding("UTF8");
 				ServletOutputStream out = response.getOutputStream();
