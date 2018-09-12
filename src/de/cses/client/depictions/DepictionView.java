@@ -19,7 +19,9 @@ import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.safehtml.shared.SafeHtml;
 import com.google.gwt.safehtml.shared.SafeUri;
 import com.google.gwt.safehtml.shared.UriUtils;
+import com.google.gwt.user.client.ui.HTML;
 import com.sencha.gxt.core.client.XTemplates;
+import com.sencha.gxt.core.client.XTemplates.XTemplate;
 import com.sencha.gxt.dnd.core.client.DndDragStartEvent;
 import com.sencha.gxt.dnd.core.client.DragSource;
 
@@ -59,8 +61,14 @@ public class DepictionView extends AbstractView {
 //		SafeHtml view(SafeUri imgUri, String caveLabel, String caveName, String depictionLabel);
 	}
 
+	interface DepictionDisplayTemplates extends XTemplates {
+		@XTemplate("<iframe style='width: 100%; height:100%' src='{uri}'><p>Your browser does not support iframes.</p></iframe>")
+		SafeHtml depiction(SafeUri uri);
+	}
+
 	private DepictionEntry depictionEntry;
 	private DepictionViewTemplates dvTemplates;
+	private DepictionDisplayTemplates ddTemplates;
 	private Resources resources;
 
 	/**
@@ -70,15 +78,17 @@ public class DepictionView extends AbstractView {
 		depictionEntry = entry;
 		resources = GWT.create(Resources.class);
 		dvTemplates = GWT.create(DepictionViewTemplates.class);
-		CaveEntry ce = entry.getCave();
-		if (ce != null) {
-			setHTML(dvTemplates.view(UriUtils.fromString("resource?imageID=" + entry.getMasterImageID() + "&thumb=80" + UserLogin.getInstance().getUsernameSessionIDParameterForUri()), 
-					StaticTables.getInstance().getSiteEntries().get(ce.getSiteID()).getShortName() + " " + ce.getOfficialNumber(), 
-					ce.getHistoricName() != null ? ce.getHistoricName() : (depictionEntry.getShortName() != null ? depictionEntry.getShortName() : "")));
-		} else {
-			setHTML(dvTemplates.view(UriUtils.fromString("resource?imageID=" + entry.getMasterImageID() + "&thumb=80" + UserLogin.getInstance().getUsernameSessionIDParameterForUri()), 
-					depictionEntry.getShortName() != null ? depictionEntry.getShortName() : ""));
-		}
+		ddTemplates = GWT.create(DepictionDisplayTemplates.class);
+		setHTML(ddTemplates.depiction(UriUtils.fromString("/resource?depictionID=" + depictionEntry.getDepictionID() + "&preview" + UserLogin.getInstance().getUsernameSessionIDParameterForUri())));
+//		CaveEntry ce = entry.getCave();
+//		if (ce != null) {
+//			setHTML(dvTemplates.view(UriUtils.fromString("resource?imageID=" + entry.getMasterImageID() + "&thumb=80" + UserLogin.getInstance().getUsernameSessionIDParameterForUri()), 
+//					StaticTables.getInstance().getSiteEntries().get(ce.getSiteID()).getShortName() + " " + ce.getOfficialNumber(), 
+//					ce.getHistoricName() != null ? ce.getHistoricName() : (depictionEntry.getShortName() != null ? depictionEntry.getShortName() : "")));
+//		} else {
+//			setHTML(dvTemplates.view(UriUtils.fromString("resource?imageID=" + entry.getMasterImageID() + "&thumb=80" + UserLogin.getInstance().getUsernameSessionIDParameterForUri()), 
+//					depictionEntry.getShortName() != null ? depictionEntry.getShortName() : ""));
+//		}
 		setPixelSize(150, 150);
 
 		DragSource source = new DragSource(this) {
