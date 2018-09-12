@@ -175,21 +175,17 @@ public class ResourceDownloadServlet extends HttpServlet {
 			}
 		} else if (request.getParameter("depictionID") != null) { // processing depictionID request
 			int depictionID = Integer.parseInt(request.getParameter("depictionID"));
-			boolean showPreview = request.getParameter("preview") == "true" ? true : false;
 			System.err.println("requestURI = " + request.getRequestURI());
 			System.err.println("remoteUser = " + request.getRemoteUser());
 			System.err.println("remoteHost = " + request.getRemoteHost());
-			if (request.getAttribute("preview") != null) {
-				System.err.println("preview is part of request");
-			}
 			System.err.println("request.getParameter(\"preview\") = " + request.getParameter("preview"));
-			System.err.println("showPreview = " + Boolean.toString(showPreview));
+			System.err.println("preview = " + "true".equals(request.getAttribute("preview")));
 			System.err.println("sessionID = " + request.getParameter("sessionID"));
 			if (depictionID <= 0) {
 				response.setStatus(400);
 				return;
 			} else {
-				DepictionDisplayFactory dhd = new DepictionDisplayFactory(depictionID, sessionID, showPreview);
+				DepictionDisplayFactory dhd = new DepictionDisplayFactory(depictionID, sessionID, "true".equals(request.getAttribute("preview")));
 				response.setContentType("text/html");
 				response.setCharacterEncoding("UTF8");
 				ServletOutputStream out = response.getOutputStream();
