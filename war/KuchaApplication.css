@@ -56,6 +56,13 @@ p.date {
 	margin-bottom: 0;
 }
 
+div.data-preview {
+	font: font: 9px tahoma,arial,verdana,sans-serif;
+	background-color: #46AD66;
+	text-align: center;
+	margin: auto;
+}
+
 div.data-view {
 	font-size: 12px;
 	background-color: #ffcc66;

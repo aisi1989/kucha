@@ -22,6 +22,7 @@ import java.nio.charset.StandardCharsets;
 
 import org.apache.commons.io.FileUtils;
 
+import de.cses.client.StaticTables;
 import de.cses.server.mysql.MysqlConnector;
 import de.cses.shared.AnnotatedBiblographyEntry;
 import de.cses.shared.CaveEntry;
@@ -67,14 +68,15 @@ public class DepictionDisplayFactory {
 					StandardCharsets.UTF_8);
 			String imageUri = String.format("resource?imageID=%d&thumb=%d&sessionID=%s", entry.getMasterImageID(), 80, sessionID);
 			CaveEntry ce = entry.getCave();
-			String label;
+			String caveLabel;
 			if (ce != null) {
-				label = connector.getSite(ce.getSiteID()).getShortName() + " " + ce.getOfficialNumber() + 
+				caveLabel = connector.getSite(ce.getSiteID()).getShortName() + " " + ce.getOfficialNumber() + 
 						ce.getHistoricName() != null ? ce.getHistoricName() : (entry.getShortName() != null ? entry.getShortName() : "");
 			} else {
-				label = entry.getShortName() != null ? entry.getShortName() : "";
+				caveLabel = "";
 			}
-			html = String.format(content, 145, 145, imageUri, label); // size of the element is 145x145
+			String depictionLabel = entry.getShortName() != null ? entry.getShortName() : "";
+			html = String.format(content, imageUri, caveLabel, depictionLabel); // size of the element is 145x145
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
