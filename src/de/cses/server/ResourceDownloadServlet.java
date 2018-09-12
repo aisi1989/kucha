@@ -175,17 +175,18 @@ public class ResourceDownloadServlet extends HttpServlet {
 			}
 		} else if (request.getParameter("depictionID") != null) { // processing depictionID request
 			int depictionID = Integer.parseInt(request.getParameter("depictionID"));
-			System.err.println("requestURI = " + request.getRequestURI());
-			System.err.println("remoteUser = " + request.getRemoteUser());
-			System.err.println("remoteHost = " + request.getRemoteHost());
-			System.err.println("request.getParameter(\"preview\") = " + request.getParameter("preview"));
-			System.err.println("preview = " + "true".equals(request.getAttribute("preview")));
-			System.err.println("sessionID = " + request.getParameter("sessionID"));
+			String preview = request.getParameter("preview");
+//			System.err.println("requestURI = " + request.getRequestURI());
+//			System.err.println("remoteUser = " + request.getRemoteUser());
+//			System.err.println("remoteHost = " + request.getRemoteHost());
+//			System.err.println("request.getParameter(\"preview\") = " + request.getParameter("preview"));
+//			System.err.println("preview = " + "true".equals(preview));
+//			System.err.println("sessionID = " + request.getParameter("sessionID"));
 			if (depictionID <= 0) {
 				response.setStatus(400);
 				return;
 			} else {
-				DepictionDisplayFactory dhd = new DepictionDisplayFactory(depictionID, sessionID, "true".equals(request.getAttribute("preview")));
+				DepictionDisplayFactory dhd = new DepictionDisplayFactory(depictionID, sessionID, "true".equals(preview));
 				response.setContentType("text/html");
 				response.setCharacterEncoding("UTF8");
 				ServletOutputStream out = response.getOutputStream();
