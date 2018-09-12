@@ -65,7 +65,7 @@ public class DepictionDisplayFactory {
 		try {
 			content = FileUtils.readFileToString(new File(getClass().getResource("./template/DepictionDisplayPreview.html").getFile()),
 					StandardCharsets.UTF_8);
-			String imageUri = String.format("resource?imageID=%d&thumb=80&sessionID=%s", entry.getMasterImageID(), sessionID);
+			String imageUri = String.format("resource?imageID=%d&thumb=%d&sessionID=%s", entry.getMasterImageID(), 80, sessionID);
 			CaveEntry ce = entry.getCave();
 			String label;
 			if (ce != null) {
@@ -74,7 +74,7 @@ public class DepictionDisplayFactory {
 			} else {
 				label = entry.getShortName() != null ? entry.getShortName() : "";
 			}
-			html = String.format(content, imageUri, label);
+			html = String.format(content, 145, 145, imageUri, label); // size of the element is 145x145
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -85,7 +85,7 @@ public class DepictionDisplayFactory {
 		try {
 			content = FileUtils.readFileToString(new File(getClass().getResource("./template/DepictionDisplayFull.html").getFile()),
 					StandardCharsets.UTF_8);
-			String imageUri = String.format("resource?imageID=%d&thumb=700&sessionID=%s", entry.getMasterImageID(), sessionID);
+			String imageUri = String.format("resource?imageID=%d&thumb=%d&sessionID=%s", entry.getMasterImageID(), 700, sessionID);
 			String fullImageUri = "resource?imageID=" + entry.getMasterImageID() + "&sessionID=" + sessionID;
 			String figureCaption = entry.getShortName()
 					+ (entry.getWidth() > 0 || entry.getHeight() > 0 ? " (width: " + entry.getWidth() + " cm, height: " + entry.getHeight() + " cm)"

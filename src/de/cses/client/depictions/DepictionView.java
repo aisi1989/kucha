@@ -79,7 +79,7 @@ public class DepictionView extends AbstractView {
 		resources = GWT.create(Resources.class);
 		dvTemplates = GWT.create(DepictionViewTemplates.class);
 		ddTemplates = GWT.create(DepictionDisplayTemplates.class);
-		setHTML(ddTemplates.depiction(UriUtils.fromString("/resource?depictionID=" + depictionEntry.getDepictionID() + "&preview" + UserLogin.getInstance().getUsernameSessionIDParameterForUri())));
+		setHTML(ddTemplates.depiction(UriUtils.fromString("/resource?depictionID=" + depictionEntry.getDepictionID() + "&preview=true" + UserLogin.getInstance().getUsernameSessionIDParameterForUri())));
 //		CaveEntry ce = entry.getCave();
 //		if (ce != null) {
 //			setHTML(dvTemplates.view(UriUtils.fromString("resource?imageID=" + entry.getMasterImageID() + "&thumb=80" + UserLogin.getInstance().getUsernameSessionIDParameterForUri()), 
