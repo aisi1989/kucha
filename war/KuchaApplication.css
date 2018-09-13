@@ -1,5 +1,5 @@
 /** Add css rules here for your application. */
-@charset "utf-8";
+ @charset "utf-8";
 
 h1 {
 	font-size: 24px;
@@ -57,10 +57,23 @@ p.date {
 }
 
 div.data-preview {
-	font: font: 9px tahoma,arial,verdana,sans-serif;
+	font: font: 9px tahoma, arial, verdana, sans-serif;
 	background-color: #46AD66;
-	text-align: center;
+	align: center;
 	margin: auto;
+	width: 150px;
+}
+
+img.data-preview {
+	display: block;
+	margin-left: auto;
+	margin-right: auto;
+}
+
+label.data-preview {
+	font: font: 9px tahoma, arial, verdana, sans-serif;
+	text-align: center;
+	text-margin: auto;
 }
 
 div.data-view {
@@ -104,15 +117,15 @@ ul.simple-list {
 }
 
 ul.simple-list>li {
-  padding-left: 1em; 
-  text-indent: -1.2em;
+	padding-left: 1em;
+	text-indent: -1.2em;
 	font-family: verdana;
 	font-size: 12px;
 }
 
 ul.simple-list>li::before {
-  content: "\2B22  ";
-  color: gray; /* or whatever color you prefer */
+	content: "\2B22  ";
+	color: gray; /* or whatever color you prefer */
 }
 
 ol.simple-list {

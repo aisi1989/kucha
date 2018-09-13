@@ -13,15 +13,19 @@
  */
 package de.cses.client.depictions;
 
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.net.URI;
+import java.net.URL;
+import java.net.URLConnection;
+
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.resources.client.ClientBundle;
 import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.safehtml.shared.SafeHtml;
 import com.google.gwt.safehtml.shared.SafeUri;
 import com.google.gwt.safehtml.shared.UriUtils;
-import com.google.gwt.user.client.ui.HTML;
 import com.sencha.gxt.core.client.XTemplates;
-import com.sencha.gxt.core.client.XTemplates.XTemplate;
 import com.sencha.gxt.dnd.core.client.DndDragStartEvent;
 import com.sencha.gxt.dnd.core.client.DragSource;
 
@@ -62,7 +66,8 @@ public class DepictionView extends AbstractView {
 	}
 
 	interface DepictionDisplayTemplates extends XTemplates {
-		@XTemplate("<iframe style='width: 100%; height:100%' src='{uri}'><p>Your browser does not support iframes.</p></iframe>")
+//		@XTemplate("<embed src=\"{uri}\" type=\"text/html\">")
+		@XTemplate("<embed src=\"{uri}\">")
 		SafeHtml depiction(SafeUri uri);
 	}
 
@@ -79,7 +84,10 @@ public class DepictionView extends AbstractView {
 		resources = GWT.create(Resources.class);
 		dvTemplates = GWT.create(DepictionViewTemplates.class);
 		ddTemplates = GWT.create(DepictionDisplayTemplates.class);
-		setHTML(ddTemplates.depiction(UriUtils.fromString("/resource?depictionID=" + depictionEntry.getDepictionID() + "&preview=true" + UserLogin.getInstance().getUsernameSessionIDParameterForUri())));
+		
+//		setHTML(ddTemplates.depiction(UriUtils.fromString("/resource?depictionID=" + depictionEntry.getDepictionID() + "&preview=true" + UserLogin.getInstance().getUsernameSessionIDParameterForUri())));
+		setHTML("<embed src=\"/resource?depictionID=" + depictionEntry.getDepictionID() + "&preview=true" + UserLogin.getInstance().getUsernameSessionIDParameterForUri() + "\">");
+		
 //		CaveEntry ce = entry.getCave();
 //		if (ce != null) {
 //			setHTML(dvTemplates.view(UriUtils.fromString("resource?imageID=" + entry.getMasterImageID() + "&thumb=80" + UserLogin.getInstance().getUsernameSessionIDParameterForUri()), 
