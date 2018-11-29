@@ -466,6 +466,8 @@ public  class OrnamenticEditor extends AbstractEditor implements ImageSelectorLi
 
 		cavesContentPanel.setHeading("Added caves");
 		cavesContentPanel.add(cavesList);
+		
+		
 
 		ToolButton edit = new ToolButton(ToolButton.REFRESH);
 		ToolButton delete = new ToolButton(ToolButton.CLOSE);
@@ -702,7 +704,7 @@ public  class OrnamenticEditor extends AbstractEditor implements ImageSelectorLi
 			}
 		});
 
-		ToolButton renameComponentButton = new ToolButton(ToolButton.PLUS);
+		ToolButton renameComponentButton = new ToolButton(ToolButton.REFRESH);
 		header.addTool(renameComponentButton);
 		renameComponentButton.addSelectHandler(new SelectHandler() {
 
